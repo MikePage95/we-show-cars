@@ -43,4 +43,4 @@ Thumbs.db
 
 # environment files
 .env
-./environments
+environments/
