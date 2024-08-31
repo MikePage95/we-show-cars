@@ -14,12 +14,7 @@ const firestore = getFirestore();
 
 const createFakeVehicle = (): Vehicle => {
   return {
-    price: faker.commerce.price({
-      min: 800000,
-      max: 1500000,
-      dec: 0,
-      symbol: 'R',
-    }),
+    price: faker.number.int({ min: 800000, max: 1500000 }),
     make: faker.vehicle.manufacturer(),
     model: faker.vehicle.model(),
     body: faker.vehicle.type(),
@@ -31,7 +26,7 @@ const addVehicles = async () => {
   try {
     const batch = firestore.batch();
 
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 100; i++) {
       const vehicle = createFakeVehicle();
       const docRef = firestore.collection('vehicles').doc();
       batch.set(docRef, vehicle);

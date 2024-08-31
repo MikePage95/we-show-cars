@@ -37,14 +37,15 @@ export class HomeComponent implements OnInit {
 
   onFilterChanged(filters: SelectedFilters) {
     const { manufacturer, bodyType, priceRange } = filters;
+
     const minPrice = parsePrice(priceRange.min) || -Infinity;
     const maxPrice = parsePrice(priceRange.max) || Infinity;
 
     this.filteredVehicles = this.vehicles.filter((vehicle) => {
       const matchesManufacturer =
-        manufacturer === 'All' || vehicle.make === manufacturer;
-      const matchesBodyType = bodyType === 'All' || vehicle.body === bodyType;
-      const vehiclePrice = parsePrice(vehicle.price);
+        manufacturer === 'Any' || vehicle.make === manufacturer;
+      const matchesBodyType = bodyType === 'Any' || vehicle.body === bodyType;
+      const vehiclePrice = vehicle.price;
 
       const matchesPriceRange =
         (minPrice === -Infinity || vehiclePrice >= minPrice) &&

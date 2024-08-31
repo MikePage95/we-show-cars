@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 
 import { Vehicle, VehicleFilters } from '@types';
-import { parsePrice } from '@utils';
 
 @Component({
   selector: 'app-filters',
@@ -25,17 +24,16 @@ export class FiltersComponent implements OnChanges {
     priceRange: { min: { options: [] }, max: { options: [] } },
   };
 
-  public selectedManufacturer: string = 'All';
-  public selectedBodyType: string = 'All';
+  public selectedManufacturer: string = 'Any';
+  public selectedBodyType: string = 'Any';
   public selectedPriceRange: { min: string; max: string } = {
-    min: '',
-    max: '',
+    min: 'Any',
+    max: 'Any',
   };
 
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes['vehicles']);
     if (changes['vehicles'] && this.vehicles) {
       this.initializeFilters();
     }
@@ -43,10 +41,14 @@ export class FiltersComponent implements OnChanges {
 
   initializeFilters(): void {
     this.filters.manufacturer.options = [
-      ...new Set(this.vehicles.map((vehicle) => vehicle.make)),
+      ...new Set(
+        ['Any', ...this.vehicles.map((vehicle) => vehicle.make)].sort()
+      ),
     ];
     this.filters.body.options = [
-      ...new Set(this.vehicles.map((vehicle) => vehicle.body)),
+      ...new Set(
+        ['Any', ...this.vehicles.map((vehicle) => vehicle.body)].sort()
+      ),
     ];
     this.updatePriceRangeOptions();
   }
@@ -55,7 +57,7 @@ export class FiltersComponent implements OnChanges {
     const { vehicles } = this;
     const priceOptions: number[] = [];
 
-    const prices = vehicles.map((vehicle) => parsePrice(vehicle.price));
+    const prices = vehicles.map((vehicle) => vehicle.price);
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
 
@@ -70,18 +72,15 @@ export class FiltersComponent implements OnChanges {
       priceOptions.push(price);
     }
 
-    const minValue = parsePrice(this.selectedPriceRange.min) || 0;
-    const maxValue = parsePrice(this.selectedPriceRange.max) || Infinity;
+    this.filters.priceRange.min.options = [
+      'Any',
+      ...priceOptions.map((price) => price.toLocaleString()).slice(0, -1),
+    ];
 
-    this.filters.priceRange.min.options = priceOptions
-      .filter((price) => price <= maxValue)
-      .map((price) => price.toLocaleString())
-      .slice(0, -1);
-
-    this.filters.priceRange.max.options = priceOptions
-      .filter((price) => price >= minValue)
-      .map((price) => price.toLocaleString())
-      .slice(1);
+    this.filters.priceRange.max.options = [
+      'Any',
+      ...priceOptions.map((price) => price.toLocaleString()).slice(1),
+    ];
   }
 
   onManufacturerSelected(manufacturer: string) {
