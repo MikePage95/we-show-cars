@@ -1,0 +1,23 @@
+<div class="header-container">
+  <mat-card appearance="outlined">
+    <div class="cart-container">
+      <button
+        mat-icon-button
+        aria-label="cart"
+        [matMenuTriggerFor]="menu"
+        (click)="openCart()"
+      >
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="cart-menu">
+        <div class="cart-popup">
+          <h3>Cart</h3>
+
+          <mat-divider></mat-divider>
+
+          <p>No items in your cart.</p>
+        </div>
+      </mat-menu>
+    </div>
+  </mat-card>
+</div>

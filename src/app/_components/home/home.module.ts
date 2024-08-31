@@ -8,11 +8,10 @@ import { MatOption } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { CarListComponent } from './car-list/car-list.component';
-import { CartComponent } from './cart/cart.component';
 import { FiltersComponent } from './filters/filters.component';
 
 @NgModule({
-  declarations: [CarListComponent, CartComponent, FiltersComponent],
+  declarations: [CarListComponent, FiltersComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -22,6 +21,6 @@ import { FiltersComponent } from './filters/filters.component';
     MatOption,
     MatDividerModule,
   ],
-  exports: [CarListComponent, CartComponent, FiltersComponent],
+  exports: [CarListComponent, FiltersComponent],
 })
 export class HomeModule {}

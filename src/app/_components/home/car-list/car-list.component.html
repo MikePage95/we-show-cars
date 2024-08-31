@@ -1,1 +1,20 @@
-<p>car-list works!</p>
+<div class="list-container">
+  <div class="card-container" *ngFor="let vehicle of vehicles">
+    <mat-card appearance="outlined">
+      <div class="card-padding">
+        <img
+          [src]="vehicle.imageUrl"
+          width="200px"
+          alt="Photo of {{ vehicle.make }} {{ vehicle.model }}"
+        />
+
+        <div class="details-container">
+          <h3>Price: {{ formatToCurrency(vehicle.price) }}</h3>
+          <h3>Make: {{ vehicle.make }}</h3>
+          <h3>Model: {{ vehicle.model }}</h3>
+          <h3>Body: {{ vehicle.body }}</h3>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

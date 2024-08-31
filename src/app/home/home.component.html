@@ -1,11 +1,10 @@
 <div>
-  <div class="home-layout">
+  <h1>Browse Vehicles</h1>
+  <div class="home-content">
     <app-filters
       [vehicles]="filteredVehicles"
       (filterChanged)="onFilterChanged($event)"
     ></app-filters>
-    <app-car-list></app-car-list>
+    <app-car-list [vehicles]="filteredVehicles"></app-car-list>
   </div>
-
-  <app-cart></app-cart>
 </div>

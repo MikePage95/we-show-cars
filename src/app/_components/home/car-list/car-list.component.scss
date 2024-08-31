@@ -1,0 +1,25 @@
+.card-container {
+  margin-bottom: 20px;
+  max-width: 50vw;
+}
+
+mat-card {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.card-padding {
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.details-container {
+  > h3 {
+    font-size: 12px;
+    font-weight: normal;
+  }
+}
+
+img {
+  border-radius: 12px;
+}

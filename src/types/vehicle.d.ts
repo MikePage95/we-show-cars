@@ -1,5 +1,5 @@
 interface Vehicle {
-  price: string;
+  price: number;
   make: string;
   model: string;
   body: string;

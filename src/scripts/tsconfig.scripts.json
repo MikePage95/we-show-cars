@@ -9,7 +9,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018"]
+    "lib": ["es2018"],
+    "paths": {
+      "@types": ["../types"]
+    }
   },
   "include": ["src/scripts/**/*.ts"],
   "exclude": ["node_modules"]
