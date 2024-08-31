@@ -3,6 +3,8 @@ import * as admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import * as serviceAccount from '../../environments/service-account.json';
 
+import { Vehicle } from '@types';
+
 admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(JSON.stringify(serviceAccount))),
 });
@@ -10,7 +12,7 @@ admin.initializeApp({
 // Get Firestore instance
 const firestore = getFirestore();
 
-const createFakeVehicle = () => {
+const createFakeVehicle = (): Vehicle => {
   return {
     price: faker.commerce.price({
       min: 800000,

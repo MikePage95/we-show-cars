@@ -1,6 +1,9 @@
 <div>
   <div class="home-layout">
-    <app-filters></app-filters>
+    <app-filters
+      [vehicles]="filteredVehicles"
+      (filterChanged)="onFilterChanged($event)"
+    ></app-filters>
     <app-car-list></app-car-list>
   </div>
 

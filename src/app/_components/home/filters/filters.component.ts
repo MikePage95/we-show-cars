@@ -1,21 +1,117 @@
-import { Component } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelect } from '@angular/material/select';
-import { MatOption } from '@angular/material/core';
-import { MatDividerModule } from '@angular/material/divider';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+
+import { Vehicle, VehicleFilters } from '@types';
+import { parsePrice } from '@utils';
 
 @Component({
   selector: 'app-filters',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatCardModule,
-    MatSelect,
-    MatOption,
-    MatDividerModule,
-  ],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.scss',
 })
-export class FiltersComponent {}
+export class FiltersComponent implements OnChanges {
+  @Input() public vehicles!: Vehicle[];
+  @Output() public filterChanged = new EventEmitter();
+
+  public filters: VehicleFilters = {
+    manufacturer: { options: [] },
+    body: { options: [] },
+    priceRange: { min: { options: [] }, max: { options: [] } },
+  };
+
+  public selectedManufacturer: string = 'All';
+  public selectedBodyType: string = 'All';
+  public selectedPriceRange: { min: string; max: string } = {
+    min: '',
+    max: '',
+  };
+
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes['vehicles']);
+    if (changes['vehicles'] && this.vehicles) {
+      this.initializeFilters();
+    }
+  }
+
+  initializeFilters(): void {
+    this.filters.manufacturer.options = [
+      ...new Set(this.vehicles.map((vehicle) => vehicle.make)),
+    ];
+    this.filters.body.options = [
+      ...new Set(this.vehicles.map((vehicle) => vehicle.body)),
+    ];
+    this.updatePriceRangeOptions();
+  }
+
+  updatePriceRangeOptions(): void {
+    const { vehicles } = this;
+    const priceOptions: number[] = [];
+
+    const prices = vehicles.map((vehicle) => parsePrice(vehicle.price));
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    const roundedMinPrice = Math.floor(minPrice / 50000) * 50000;
+    const roundedMaxPrice = Math.ceil(maxPrice / 50000) * 50000;
+
+    for (
+      let price = roundedMinPrice;
+      price <= roundedMaxPrice;
+      price += 50000
+    ) {
+      priceOptions.push(price);
+    }
+
+    const minValue = parsePrice(this.selectedPriceRange.min) || 0;
+    const maxValue = parsePrice(this.selectedPriceRange.max) || Infinity;
+
+    this.filters.priceRange.min.options = priceOptions
+      .filter((price) => price <= maxValue)
+      .map((price) => price.toLocaleString())
+      .slice(0, -1);
+
+    this.filters.priceRange.max.options = priceOptions
+      .filter((price) => price >= minValue)
+      .map((price) => price.toLocaleString())
+      .slice(1);
+  }
+
+  onManufacturerSelected(manufacturer: string) {
+    this.selectedManufacturer = manufacturer;
+    this.emitFilterChange();
+  }
+
+  onBodyTypeSelected(bodyType: string) {
+    this.selectedBodyType = bodyType;
+    this.emitFilterChange();
+  }
+
+  onPriceRangeSelected(type: 'min' | 'max', value: string) {
+    if (type === 'min') {
+      this.selectedPriceRange.min = value;
+    } else if (type === 'max') {
+      this.selectedPriceRange.max = value;
+    }
+
+    this.emitFilterChange();
+  }
+
+  private emitFilterChange() {
+    this.filterChanged.emit({
+      manufacturer: this.selectedManufacturer,
+      bodyType: this.selectedBodyType,
+      priceRange: {
+        min: this.selectedPriceRange.min,
+        max: this.selectedPriceRange.max,
+      },
+    });
+  }
+}
