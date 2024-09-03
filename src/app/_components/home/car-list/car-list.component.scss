@@ -1,6 +1,8 @@
 .card-container {
   margin-bottom: 20px;
-  max-width: 50vw;
+  max-width: 500px;
+  width: auto;
+  margin-right: 20px;
 }
 
 mat-card {
@@ -11,6 +13,7 @@ mat-card {
   padding: 20px;
   display: flex;
   gap: 20px;
+  position: relative;
 }
 
 .details-container {
@@ -22,4 +25,10 @@ mat-card {
 
 img {
   border-radius: 12px;
+}
+
+button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
 }
