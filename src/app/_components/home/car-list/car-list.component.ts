@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Cart, Vehicle, VehicleWithId } from '@types';
+import { Cart, VehicleWithId } from '@types';
 import { formatToCurrency } from '@utils';
 import { HomeService } from '../../../_services/home.service';
 
@@ -12,9 +12,10 @@ import { HomeService } from '../../../_services/home.service';
   styleUrl: './car-list.component.scss',
 })
 export class CarListComponent implements OnInit, OnDestroy {
-  @Input() vehicles: Vehicle[] = [];
+  @Input() vehicles: VehicleWithId[] = [];
   public formatToCurrency = formatToCurrency;
   public cart: string[] = [];
+  public loading = true;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -29,6 +30,7 @@ export class CarListComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.homeService.getCart().subscribe((cart: Cart) => {
           this.cart = cart.items;
+          this.loading = false;
         })
       );
     }

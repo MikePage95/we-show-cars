@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { HomeService } from '../_services/home.service';
 import { HomeModule } from '../_components/home/home.module';
 
-import { Vehicle, SelectedFilters } from '@types';
+import { SelectedFilters, VehicleWithId } from '@types';
 import { parsePrice } from '@utils';
 
 @Component({
@@ -16,15 +16,15 @@ import { parsePrice } from '@utils';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  public vehicles: Vehicle[] = [];
-  public filteredVehicles: Vehicle[] = [];
+  public vehicles: VehicleWithId[] = [];
+  public filteredVehicles: VehicleWithId[] = [];
   private subscriptions: Subscription[] = [];
 
   constructor(private homeService: HomeService) {}
 
   ngOnInit() {
     this.subscriptions.push(
-      this.homeService.getVehicles().subscribe((vehicles: Vehicle[]) => {
+      this.homeService.getVehicles().subscribe((vehicles: VehicleWithId[]) => {
         this.vehicles = vehicles;
         this.filteredVehicles = vehicles;
       })

@@ -14,7 +14,7 @@ import {
 import { setCartId } from '../_store/cart/cart.actions';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { Vehicle } from '@types';
+import { VehicleWithId } from '@types';
 
 @Injectable({ providedIn: 'root' })
 export class HomeService {
@@ -27,13 +27,13 @@ export class HomeService {
     return collectionData(vehiclesCollection, { idField: 'id' });
   }
 
-  getVehiclesByIds(ids: string[]): Observable<Vehicle[]> {
+  getVehiclesByIds(ids: string[]): Observable<VehicleWithId[]> {
     const vehicleObservables = ids.map((id) => {
       const vehicleRef = doc(this.firestore, 'vehicles', id);
       return docData(vehicleRef, { idField: 'id' });
-    });
+    }) as Observable<VehicleWithId>[];
 
-    return combineLatest(vehicleObservables) as Observable<Vehicle[]>;
+    return combineLatest(vehicleObservables);
   }
 
   getCart() {

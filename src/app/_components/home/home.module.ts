@@ -8,6 +8,7 @@ import { MatOption } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { CarListComponent } from './car-list/car-list.component';
 import { FiltersComponent } from './filters/filters.component';
@@ -24,6 +25,7 @@ import { FiltersComponent } from './filters/filters.component';
     MatDividerModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   exports: [CarListComponent, FiltersComponent],
 })

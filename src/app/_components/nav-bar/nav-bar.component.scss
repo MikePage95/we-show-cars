@@ -22,6 +22,7 @@ h4 {
   font-size: 12px;
   margin: 5px 0;
   line-height: 30px;
+  font-weight: 500;
 }
 
 mat-list-item.mdc-list-item.mdc-list-item--with-one-line {
@@ -31,4 +32,20 @@ mat-list-item.mdc-list-item.mdc-list-item--with-one-line {
 .cart-items {
   display: flex;
   justify-content: space-between;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
 }
