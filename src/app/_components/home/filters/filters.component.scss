@@ -1,4 +1,13 @@
 .mat-mdc-form-field {
   display: block;
-  max-width: 180px;
+  @media screen and (min-width: 650px) {
+    max-width: 180px;
+  }
+}
+
+.filter-container {
+  padding-bottom: 20px;
+  @media screen and (min-width: 650px) {
+    padding-bottom: 0;
+  }
 }

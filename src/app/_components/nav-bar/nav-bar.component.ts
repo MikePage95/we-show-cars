@@ -10,7 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 
 import { HomeService } from '../../_services/home.service';
-import { Cart, Vehicle, VehicleWithId } from '@types';
+import { Cart, VehicleWithId } from '@types';
 import { selectCartId } from '../../_store/cart/cart.selectors';
 import { AppState } from '../../_store/app.state';
 import { formatToCurrency } from '@utils';
@@ -36,7 +36,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   public cartId$: Observable<string | null>;
   public cart: string[] = [];
-  public cartVehicles: Vehicle[] = [];
+  public cartVehicles: VehicleWithId[] = [];
   public formatToCurrency = formatToCurrency;
 
   constructor(
@@ -54,11 +54,13 @@ export class NavBarComponent implements OnInit, OnDestroy {
           this.subscriptions.push(
             this.homeService.getCart().subscribe((cart: Cart) => {
               this.cart = cart.items;
+              if (this.cart.length === 0) {
+                this.cartVehicles = [];
+              }
 
               this.homeService
                 .getVehiclesByIds(this.cart)
                 .subscribe((vehicles) => {
-                  console.log(vehicles);
                   this.cartVehicles = vehicles;
                 });
             })
