@@ -14,6 +14,10 @@
           <h3>Model: {{ vehicle.model }}</h3>
           <h3>Body: {{ vehicle.body }}</h3>
         </div>
+
+        <button mat-stroked-button (click)="addToCart(vehicle)">
+          {{ cart.includes(vehicle.id) ? "Remove from Cart" : "Add to Cart" }}
+        </button>
       </div>
     </mat-card>
   </div>

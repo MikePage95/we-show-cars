@@ -6,4 +6,8 @@ interface Vehicle {
   imageUrl: string;
 }
 
-export { Vehicle };
+interface VehicleWithId extends Vehicle {
+  id: string;
+}
+
+export { Vehicle, VehicleWithId };

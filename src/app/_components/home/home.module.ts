@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { CarListComponent } from './car-list/car-list.component';
 import { FiltersComponent } from './filters/filters.component';
@@ -20,6 +22,8 @@ import { FiltersComponent } from './filters/filters.component';
     MatSelect,
     MatOption,
     MatDividerModule,
+    MatButtonModule,
+    MatSnackBarModule,
   ],
   exports: [CarListComponent, FiltersComponent],
 })
