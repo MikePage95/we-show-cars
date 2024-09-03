@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -11,7 +18,7 @@ import { HomeService } from '../../../_services/home.service';
   templateUrl: './car-list.component.html',
   styleUrl: './car-list.component.scss',
 })
-export class CarListComponent implements OnInit, OnDestroy {
+export class CarListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() vehicles: VehicleWithId[] = [];
   public formatToCurrency = formatToCurrency;
   public cart: string[] = [];
@@ -30,9 +37,14 @@ export class CarListComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.homeService.getCart().subscribe((cart: Cart) => {
           this.cart = cart.items;
-          this.loading = false;
         })
       );
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['vehicles'] && changes['vehicles'].currentValue) {
+      this.loading = false;
     }
   }
 
