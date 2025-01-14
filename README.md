@@ -7,6 +7,7 @@ service-account.json. Paste these 2 files within an environments folder at the s
 as the src folder
 
 run
-`nvm use` (if you don't have that node version run `nvm install`)
+`nvm install 20.17.0`
+`nvm use 20.17.0`
 `npm i`
 `npm run start`
