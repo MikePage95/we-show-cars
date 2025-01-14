@@ -1,5 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import {
+  BehaviorSubject,
+  combineLatest,
+  from,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 
 import { HomeService } from '../_services/home.service';
 import { HomeModule } from '../_components/home/home.module';
@@ -11,45 +20,60 @@ import { parsePrice } from '@utils';
   selector: 'app-home',
   standalone: true,
   providers: [HomeService],
-  imports: [HomeModule],
+  imports: [HomeModule, AsyncPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
-  public vehicles: VehicleWithId[] = [];
-  public filteredVehicles: VehicleWithId[] = [];
-  private subscriptions: Subscription[] = [];
+export class HomeComponent implements OnInit, OnDestroy {
+  public vehicles$: Observable<VehicleWithId[]> = from([]);
+  public filteredVehicles$: Observable<VehicleWithId[]> = from([]);
+  public destroy$ = new Subject<void>();
+  private filterSubject = new BehaviorSubject<SelectedFilters>({
+    manufacturer: 'Any',
+    bodyType: 'Any',
+    priceRange: { min: 'Any', max: 'Any' },
+  });
 
   constructor(private homeService: HomeService) {}
 
   ngOnInit() {
-    this.subscriptions.push(
-      this.homeService.getVehicles().subscribe((vehicles: VehicleWithId[]) => {
-        this.vehicles = vehicles;
-        this.filteredVehicles = vehicles;
-      })
+    this.vehicles$ = this.homeService
+      .getVehicles()
+      .pipe(takeUntil(this.destroy$));
+
+    this.filteredVehicles$ = combineLatest([
+      this.vehicles$,
+      this.filterSubject.asObservable(),
+    ]).pipe(
+      map(([vehicles, filters]) => this.filterVehicles(vehicles, filters)),
+      takeUntil(this.destroy$)
     );
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  onFilterChanged(filters: SelectedFilters) {
-    const { manufacturer, bodyType, priceRange } = filters;
+  onFilterChanged(filters: SelectedFilters): void {
+    this.filterSubject.next(filters);
+  }
 
+  private filterVehicles(
+    vehicles: VehicleWithId[],
+    filters: SelectedFilters
+  ): VehicleWithId[] {
+    const { manufacturer, bodyType, priceRange } = filters;
     const minPrice = parsePrice(priceRange.min) || -Infinity;
     const maxPrice = parsePrice(priceRange.max) || Infinity;
 
-    this.filteredVehicles = this.vehicles.filter((vehicle) => {
+    return vehicles.filter((vehicle) => {
       const matchesManufacturer =
         manufacturer === 'Any' || vehicle.make === manufacturer;
       const matchesBodyType = bodyType === 'Any' || vehicle.body === bodyType;
-      const vehiclePrice = vehicle.price;
-
       const matchesPriceRange =
-        (minPrice === -Infinity || vehiclePrice >= minPrice) &&
-        (maxPrice === Infinity || vehiclePrice <= maxPrice);
+        (minPrice === -Infinity || vehicle.price >= minPrice) &&
+        (maxPrice === Infinity || vehicle.price <= maxPrice);
 
       return matchesManufacturer && matchesBodyType && matchesPriceRange;
     });
